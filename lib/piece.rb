@@ -25,5 +25,6 @@ class Piece
       @traits[:move] = [[0,-1]]
       @traits[:capture] = [[-1,-1],[1,-1]]
     end
+    @traits[:has_moved] = false
   end
 end
