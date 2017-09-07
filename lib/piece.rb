@@ -27,4 +27,10 @@ class Piece
     end
     @traits[:has_moved] = false
   end
+
+  def king
+    @traits[:move] = [[0,1], [0,-1], [-1,1], [1,1], [-1,-1], [1,-1], [1,0], [-1,0]]
+    @traits[:capture] = @traits[:move]
+    @traits[:has_castled] = false
+  end
 end
