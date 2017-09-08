@@ -1,3 +1,4 @@
+
 # Controls the definition and attributes of individual pieces
 class Piece
   attr_accessor :color, :traits
@@ -9,7 +10,7 @@ class Piece
 
   private
 
-# Builds the attributes of the piece based on type
+  # Builds the attributes of the piece based on type
   def actualize
     @traits = Hash.new
     @traits[:color] = @color
@@ -17,7 +18,7 @@ class Piece
     self.send(@type)
   end
 
-# Contains attributes for pawns
+  # Contains attributes for pawns
   def pawn
     if @traits[:color] == :white
       @traits[:move] = [[0,1]]
@@ -29,14 +30,14 @@ class Piece
     @traits[:has_moved] = false
   end
 
-# Contains attributes for kings
+  # Contains attributes for kings
   def king
     @traits[:move] = [[0,1], [0,-1], [-1,1], [1,1], [-1,-1], [1,-1], [1,0], [-1,0]]
     @traits[:capture] = @traits[:move]
     @traits[:has_castled] = false
   end
 
-# Contains attributes for queens
+  # Contains attributes for queens
   def queen
     @traits[:move] = []
     # Cheaper than manually entering every permutation
@@ -63,5 +64,19 @@ class Piece
     end
 
     @traits[:capture] = @traits[:move]
+  end
+
+  # Contains attributes for rooks
+  def rook
+    # Vertical and horizontal movement
+    for i in -7..7 do
+      @traits[:move] << [0, i] unless i == 0
+    end
+    for i in -7..7 do
+      @traits[:move] << [i, 0] unless i == 0
+    end
+
+    @traits[:capture] = @traits[:move]
+    @traits[:has_castled] = false
   end
 end
