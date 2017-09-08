@@ -79,4 +79,22 @@ class Piece
     @traits[:capture] = @traits[:move]
     @traits[:has_castled] = false
   end
+
+  # Contains attributes for bishops
+  def bishop
+    # Diagonal movement:
+    for i in 1..7 do
+      @traits[:move] << [i, i]
+    end
+    for i in 1..7 do
+      @traits[:move] << [i, i * (-1)]
+    end
+    for i in 1..7 do
+      @traits[:move] << [i * (-1), i]
+    end
+    for i in 1..7 do
+      @traits[:move] << [i * (-1), i * (-1)]
+    end
+    @traits[:capture] = @traits[:move]
+  end
 end
