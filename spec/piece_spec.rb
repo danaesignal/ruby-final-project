@@ -1,7 +1,7 @@
 require "piece"
 describe Piece do
   context "when initialized" do
-    context "with :queen" do
+    context "with :white :queen" do
       before(:each) do
         @test = Piece.new(:white, :queen)
       end
@@ -48,6 +48,10 @@ describe Piece do
 
       it "should not include the movement [0,9]" do
         expect(@test.traits[:move]).not_to include([0,9])
+      end
+
+      it "should correctly self-identify as a white queen" do
+        expect(@test.traits[:short_desc]).to eql("white queen")
       end
     end
   end

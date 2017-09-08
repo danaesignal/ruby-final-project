@@ -1,7 +1,7 @@
 
 # Controls the definition and attributes of individual pieces
 class Piece
-  attr_accessor :color, :traits
+  attr_accessor :traits
   def initialize(color, type)
     @color = color
     @type = type
@@ -15,6 +15,7 @@ class Piece
     @traits = Hash.new
     @traits[:color] = @color
     @traits[:type] = @type
+    @traits[:short_desc] = "#{@color.to_s} #{@type.to_s}"
     self.send(@type)
   end
 
