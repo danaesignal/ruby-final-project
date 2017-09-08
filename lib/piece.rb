@@ -97,4 +97,10 @@ class Piece
     end
     @traits[:capture] = @traits[:move]
   end
+
+  # Contains attributes for knights, saying "Ni" optional
+  def knight
+    @traits[:move] = [[1,2], [1,-2], [-1, 2], [-1,-2], [2,1], [2, -1], [-2, 1], [-2,-1]]
+    @traits[:capture] = @traits[:move]
+  end
 end
