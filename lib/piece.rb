@@ -16,6 +16,8 @@ class Piece
     @traits[:color] = @color
     @traits[:type] = @type
     @traits[:short_desc] = "#{@color.to_s} #{@type.to_s}"
+    @traits[:can_move_to] = []
+    @traits[:can_capture] = []
     self.send(@type)
   end
 
