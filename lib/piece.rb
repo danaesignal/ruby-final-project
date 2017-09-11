@@ -36,6 +36,7 @@ class Piece
     @traits[:move] = [[0,1], [0,-1], [-1,1], [1,1], [-1,-1], [1,-1], [1,0], [-1,0]]
     @traits[:capture] = @traits[:move]
     @traits[:has_castled] = false
+    @traits[:in_check] = false
   end
 
   # Contains attributes for queens
