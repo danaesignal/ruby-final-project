@@ -2,8 +2,9 @@ require "piece"
 class Set
   attr_accessor :traits
 
-  def initialize(color)
+  def initialize(color, parent)
     @color = color
+    @parent = parent
     @traits = Hash.new
   end
 
