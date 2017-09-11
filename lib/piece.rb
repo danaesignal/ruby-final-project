@@ -62,10 +62,12 @@ class Piece
 
     # Vertical and horizontal movement
     for i in -7..7 do
-      @traits[:move_data] << [0, i] unless i == 0
+      next if i == 0
+      @traits[:move_data] << [0, i]
     end
     for i in -7..7 do
-      @traits[:move_data] << [i, 0] unless i == 0
+      next if i == 0
+      @traits[:move_data] << [i, 0]
     end
 
     @traits[:capture_data] = @traits[:move_data]
@@ -73,12 +75,15 @@ class Piece
 
   # Contains attributes for rooks
   def rook
+    @traits[:move_data] = []
     # Vertical and horizontal movement
     for i in -7..7 do
-      @traits[:move_data] << [0, i] unless i == 0
+      next if i == 0
+      @traits[:move_data] << [0, i]
     end
     for i in -7..7 do
-      @traits[:move_data] << [i, 0] unless i == 0
+      next if i == 0
+      @traits[:move_data] << [i, 0]
     end
 
     @traits[:capture_data] = @traits[:move_data]
@@ -87,6 +92,7 @@ class Piece
 
   # Contains attributes for bishops
   def bishop
+    @traits[:move_data] = []
     # Diagonal movement:
     for i in 1..7 do
       @traits[:move_data] << [i, i]
