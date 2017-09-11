@@ -2,9 +2,10 @@
 # Controls the definition and attributes of individual pieces
 class Piece
   attr_accessor :traits
-  def initialize(color, type)
+  def initialize(color, type, owner)
     @color = color
     @type = type
+    @owner = owner
     actualize
   end
 
