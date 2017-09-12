@@ -51,4 +51,19 @@ describe Set do
       expect(@white_set.data.values.count{|x| x.traits[:type] == :queen}).to eql(1)
     end
   end
+  describe "#capture_piece" do
+    before(:each) do
+      @white_set = Set.new(:white, self)
+      @white_set.build_set
+    end
+    it "should remove a piece from a valid location" do
+      expect(@white_set.capture_piece([1,1])).to eql(true)
+      expect(@white_set.data.keys.count).to eql(15)
+      expect(@white_set.captured.count).to eql(1)
+    end
+    it "should return false when trying to capture an empty square" do
+      expect(@white_set.capture_piece([8,8])).to eql(false)
+      expect(@white_set.data.keys.count).to eql(16)
+    end
+  end
 end

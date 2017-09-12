@@ -1,16 +1,18 @@
-require "piece"
+require_relative "piece"
+# Controls the creation and assignment of pieces in a complete set.
 class Set
-  attr_accessor :data
+  attr_reader :data, :captured
 
   def initialize(color, parent)
     @color = color
     @parent = parent
     @data = Hash.new
+    @captured = []
   end
 
   # Populates the board, placing pieces based on color and type
   def build_set
-    if @color == :white
+    if @color == :black
       # Rooks
       place_piece([1,8],@color, :rook)
       place_piece([8,8],@color, :rook)
@@ -63,6 +65,19 @@ class Set
     @data[location] = Piece.new(color, piece, self)
   end
 
-  def capture_piece
+  def capture_piece(location)
+    if @data[location]
+      @captured << @data[location]
+      @data.delete(location)
+      return true
+    else
+      return false
+    end
   end
 end
+#
+# white_set = Set.new(:white, self)
+#
+# white_set.build_set
+#
+# puts white_set.data
