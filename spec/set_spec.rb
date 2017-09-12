@@ -28,27 +28,35 @@ describe Set do
     before(:all) do
       @white_set = Set.new(:white, self)
       @white_set.build_set
+      @black_set = Set.new(:black, self)
+      @black_set.build_set
     end
-    it "should place 16 pieces" do
+    it "should place 16 white pieces" do
       expect(@white_set.data.keys.length).to eql(16)
     end
-    it "should place eight pawns" do
-      expect(@white_set.data.values.count{|x| x.traits[:type] == :pawn}).to eql(8)
+    it "should place eight black pawns" do
+      expect(@black_set.data.values.count{|x| x.traits[:type] == :pawn}).to eql(8)
     end
-    it "should place two rooks" do
+    it "should place two white rooks" do
       expect(@white_set.data.values.count{|x| x.traits[:type] == :rook}).to eql(2)
     end
-    it "should place two bishops" do
-      expect(@white_set.data.values.count{|x| x.traits[:type] == :bishop}).to eql(2)
+    it "should place two black bishops" do
+      expect(@black_set.data.values.count{|x| x.traits[:type] == :bishop}).to eql(2)
     end
-    it "should place two knights" do
+    it "should place two white knights" do
       expect(@white_set.data.values.count{|x| x.traits[:type] == :knight}).to eql(2)
     end
-    it "should place one king" do
-      expect(@white_set.data.values.count{|x| x.traits[:type] == :king}).to eql(1)
+    it "should place one black king" do
+      expect(@black_set.data.values.count{|x| x.traits[:type] == :king}).to eql(1)
     end
-    it "should place one queen" do
+    it "should place one white queen" do
       expect(@white_set.data.values.count{|x| x.traits[:type] == :queen}).to eql(1)
+    end
+    it "should place a black queen on d8" do
+      expect(@black_set.data[[4,8]].traits[:type]).to eql(:queen)
+    end
+    it "should place a white queen on d1" do
+      expect(@white_set.data[[4,1]].traits[:type]).to eql(:queen)
     end
   end
   describe "#capture_piece" do
