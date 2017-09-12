@@ -22,13 +22,17 @@ class Set
     end
   end
 
+  # Method for placing new pieces; primarily used in building a set
+  # But also used when promoting a pawn
   def place_piece(location, color, piece)
     @data[location] = Piece.new(color, piece, self)
   end
 
-  def capture_piece(location)
+  # Method for removing a piece from active play; primary used during capture
+  # But also used to remove a pawn after promotion
+  def capture_piece(location, promotion=false)
     if @data[location]
-      @captured << @data[location]
+      promotion == false ? @captured << @data[location] : nil
       @data.delete(location)
       return true
     else
