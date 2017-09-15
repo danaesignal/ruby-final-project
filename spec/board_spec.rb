@@ -44,41 +44,41 @@ describe Board do
       @gameboard.populate_board
     end
     it "should place a white rook on a1" do
-      expect(@gameboard.data[[1,1]][:occupant].traits[:type]).to eql(:rook)
-      expect(@gameboard.data[[1,1]][:occupant].traits[:color]).to eql(:white)
+      expect(@gameboard.data[[1,1]][:occupant].type).to eql(:rook)
+      expect(@gameboard.data[[1,1]][:occupant].color).to eql(:white)
     end
     it "should place a black rook on h8" do
-      expect(@gameboard.data[[8,8]][:occupant].traits[:type]).to eql(:rook)
-      expect(@gameboard.data[[8,8]][:occupant].traits[:color]).to eql(:black)
+      expect(@gameboard.data[[8,8]][:occupant].type).to eql(:rook)
+      expect(@gameboard.data[[8,8]][:occupant].color).to eql(:black)
     end
     it "should place a white knight on b1" do
-      expect(@gameboard.data[[2,1]][:occupant].traits[:type]).to eql(:knight)
-      expect(@gameboard.data[[2,1]][:occupant].traits[:color]).to eql(:white)
+      expect(@gameboard.data[[2,1]][:occupant].type).to eql(:knight)
+      expect(@gameboard.data[[2,1]][:occupant].color).to eql(:white)
     end
     it "should place a black knight on g8" do
-      expect(@gameboard.data[[7,8]][:occupant].traits[:type]).to eql(:knight)
-      expect(@gameboard.data[[7,8]][:occupant].traits[:color]).to eql(:black)
+      expect(@gameboard.data[[7,8]][:occupant].type).to eql(:knight)
+      expect(@gameboard.data[[7,8]][:occupant].color).to eql(:black)
     end
     it "should place a white bishop on b1" do
-      expect(@gameboard.data[[3,1]][:occupant].traits[:type]).to eql(:bishop)
-      expect(@gameboard.data[[3,1]][:occupant].traits[:color]).to eql(:white)
+      expect(@gameboard.data[[3,1]][:occupant].type).to eql(:bishop)
+      expect(@gameboard.data[[3,1]][:occupant].color).to eql(:white)
     end
     it "should place a black bishop on g8" do
-      expect(@gameboard.data[[6,8]][:occupant].traits[:type]).to eql(:bishop)
-      expect(@gameboard.data[[6,8]][:occupant].traits[:color]).to eql(:black)
+      expect(@gameboard.data[[6,8]][:occupant].type).to eql(:bishop)
+      expect(@gameboard.data[[6,8]][:occupant].color).to eql(:black)
     end
     it "should place a white queen on d1" do
-      expect(@gameboard.data[[4,1]][:occupant].traits[:type]).to eql(:queen)
-      expect(@gameboard.data[[4,1]][:occupant].traits[:color]).to eql(:white)
+      expect(@gameboard.data[[4,1]][:occupant].type).to eql(:queen)
+      expect(@gameboard.data[[4,1]][:occupant].color).to eql(:white)
     end
     it "should place a black king on e8" do
-      expect(@gameboard.data[[5,8]][:occupant].traits[:type]).to eql(:king)
-      expect(@gameboard.data[[5,8]][:occupant].traits[:color]).to eql(:black)
+      expect(@gameboard.data[[5,8]][:occupant].type).to eql(:king)
+      expect(@gameboard.data[[5,8]][:occupant].color).to eql(:black)
     end
 
     it "should place 16 pawns" do
       placed_pieces = @gameboard.data.select{|k,v| v.include?(:occupant)}
-      expect(placed_pieces.select{|k,v| v[:occupant].traits[:type]==:pawn}.count).to eql(16)
+      expect(placed_pieces.select{|k,v| v[:occupant].type==:pawn}.count).to eql(16)
     end
   end
 end
