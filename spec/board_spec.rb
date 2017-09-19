@@ -92,12 +92,12 @@ describe Board do
   end
 
   describe ":generate_moves" do
+    before(:each) do
+      @gameboard = Board.new
+      @gameboard.build_board
+      @gameboard.populate_board
+    end
     context "for pawns" do
-      before(:each) do
-        @gameboard = Board.new
-        @gameboard.build_board
-        @gameboard.populate_board
-      end
       it "should identify if it is a pawn" do
         expect(@gameboard).to receive(:generate_pawn_moves)
         @gameboard.generate_moves(@gameboard.data[[2,2]][:occupant])
@@ -131,15 +131,33 @@ describe Board do
       end
     end
 
-
-    # it "should not add moves to a blocked rook's list" do
-    #   @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
-    #   expect(@gameboard.data[[1,1]][:occupant].can_move_to).to_not include([1,2])
-    # end
-    # it "should add [1,2] to a1 rook if a2 pawn removed" do
-    #   @gameboard.data[[1,2]][:occupant] = nil
-    #   @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
-    #   expect(@gameboard.data[[1,1]][:occupant].can_move_to).to include([1,2])
-    # end
+    context "for rooks" do
+      it "should not add moves to a blocked rook's list" do
+        @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
+        expect(@gameboard.data[[1,1]][:occupant].can_move_to).to_not include([1,2])
+      end
+      it "should add [1,2] to a1 rook if a2 pawn removed" do
+        @gameboard.data[[1,2]][:occupant] = nil
+        @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
+        expect(@gameboard.data[[1,1]][:occupant].can_move_to).to include([1,2])
+      end
+      it "shoud allow a1 rook to capture a7 if not blocked" do
+        @gameboard.data[[1,2]][:occupant] = nil
+        @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
+        expect(@gameboard.data[[1,1]][:occupant].can_move_to).to include([1,7])
+      end
+      it "shoud allow a1 rook to capture a2 if enemy pawn present" do
+        pawn = double("Piece", :type => :pawn, :color => :black)
+        @gameboard.data[[1,2]][:occupant] = pawn
+        @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
+        expect(@gameboard.data[[1,1]][:occupant].can_move_to).to include([1,2])
+      end
+      it "shoud not allow a1 rook to capture a7 if enemy pawn present at a2" do
+        pawn = double("Piece", :type => :pawn, :color => :black)
+        @gameboard.data[[1,2]][:occupant] = pawn
+        @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
+        expect(@gameboard.data[[1,1]][:occupant].can_move_to).to_not include([1,7])
+      end
+    end
   end
 end

@@ -38,18 +38,22 @@ class Board
   # Calls appropriate methods for pawns and knights
   def generate_moves(curr_piece)
     return generate_pawn_moves(curr_piece) if curr_piece.type == :pawn
-    # curr_loc = curr_piece.owner.data.key(curr_piece)
-    # curr_piece.move_data.each do |k,v|
-    #   v.each do |x|
-    #     possible_move = [curr_loc[0] + x[0], curr_loc[1] + x[1]]
-    #     next unless @data.keys.include?(possible_move)
-    #     if @data[possible_move][:occupant] == nil
-    #       curr_piece.can_move_to << possible_move
-    #     else
-    #       break
-    #     end
-    #   end
-    # end
+    curr_piece.color == :white ? opposition = :black : opposition = :white
+    curr_loc = curr_piece.owner.data.key(curr_piece)
+    curr_piece.move_data.each do |k,v|
+      v.each do |x|
+        possible_move = [curr_loc[0] + x[0], curr_loc[1] + x[1]]
+        next unless @data.keys.include?(possible_move)
+        if @data[possible_move][:occupant] == nil
+          curr_piece.can_move_to << possible_move
+        elsif @data[possible_move][:occupant].color == opposition
+          curr_piece.can_move_to << possible_move
+          break
+        else
+          break
+        end
+      end
+    end
   end
 
   # Generates the list of legal moves and captures for a pawn
