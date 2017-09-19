@@ -160,4 +160,33 @@ describe Board do
       end
     end
   end
+
+  describe ":king_move_list_cleanup" do
+    before(:each) do
+      @gameboard.build_board
+      @gameboard.populate_board
+    end
+    context "with white king b1 and black rook a2" do
+      it "should remove b2 from the king's allowable moves" do
+        #Moving rook
+        @gameboard.data[[4,4]][:occupant] = @gameboard.data[[1,8]][:occupant]
+        @gameboard.data[[1,8]][:occupant] = nil
+        @gameboard.black_set.data[[4,4]] = @gameboard.black_set.data[[1,8]]
+        @gameboard.black_set.data[[1,8]] = nil
+
+        #Moving king
+        @gameboard.data[[5,3]][:occupant] = @gameboard.data[[5,1]][:occupant]
+        @gameboard.data[[5,1]][:occupant] = nil
+        @gameboard.white_set.data[[5,3]] = @gameboard.white_set.data[[5,1]]
+        @gameboard.white_set.data[[5,1]] = nil
+
+        @gameboard.generate_moves(@gameboard.data[[4,4]][:occupant])
+        @gameboard.generate_moves(@gameboard.data[[5,3]][:occupant])
+
+        @gameboard.king_move_list_cleanup
+
+        expect(@gameboard.data[[5,3]][:occupant].can_move_to).to_not include([5,4])
+      end
+    end
+  end
 end

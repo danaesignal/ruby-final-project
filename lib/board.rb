@@ -1,7 +1,7 @@
 require_relative "set"
 # Controls the layout of the board, and what piece lies where
 class Board
-  attr_reader :data, :white_set
+  attr_reader :data, :white_set, :black_set
 
   def initialize
     @data = Hash.new
@@ -27,10 +27,12 @@ class Board
 
     @white_set.data.each do |key, value|
       @data[key][:occupant] = value
+      value.type == :king ? @white_king = value : nil
     end
 
     @black_set.data.each do |key, value|
       @data[key][:occupant] = value
+      value.type == :king ? @black_king = value : nil
     end
   end
 
@@ -96,5 +98,21 @@ class Board
 
     # Needs to clear the movement data to ensure accuracy between iterations
     pawn_moves.clear
+  end
+
+  # Ensures that the kings cannot move into check, as per rules of chess
+  def king_move_list_cleanup
+    @white_set.data.each do |k,v|
+      next if v.nil?
+      v.can_move_to.each do |x|
+        @black_king.can_move_to.delete(x)
+      end
+    end
+    @black_set.data.each do |k,v|
+      next if v.nil?
+      v.can_move_to.each do |x|
+        @white_king.can_move_to.delete(x)
+      end
+    end
   end
 end

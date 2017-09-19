@@ -1,7 +1,7 @@
 require_relative "piece"
 # Controls the creation and assignment of pieces in a complete set.
 class Set
-  attr_reader :data, :captured
+  attr_accessor :data, :captured
 
   def initialize(color, parent)
     @color = color
