@@ -1,7 +1,7 @@
 
 # Controls the definition and attributes of individual pieces
 class Piece
-  attr_reader :color, :type, :owner, :short_desc, :move_data, :can_move_to, :can_capture, :capture_data, :has_moved, :has_castled, :in_check
+  attr_accessor :color, :type, :owner, :short_desc, :move_data, :can_move_to, :can_capture, :capture_data, :has_moved, :has_castled, :in_check
   def initialize(color, type, owner)
     @color = color
     @type = type
@@ -25,12 +25,12 @@ class Piece
     @capture_data = Hash.new
     if @color == :white
       @move_data[:n] << [0,1]
-      @capture_data[:nw] == [-1,1]
-      @capture_data[:ne] == [1,1]
+      @capture_data[:nw] = [-1,1]
+      @capture_data[:ne] = [1,1]
     else
       @move_data[:n] << [0,-1]
-      @capture_data[:sw] == [-1,-1]
-      @capture_data[:se] == [1,-1]
+      @capture_data[:sw] = [-1,-1]
+      @capture_data[:se] = [1,-1]
     end
     @has_moved = false
   end
@@ -101,7 +101,7 @@ class Piece
       next if i == 0
       @move_data[:w] << [i * -1, 0]
     end
-    
+
     @has_castled = false
   end
 
