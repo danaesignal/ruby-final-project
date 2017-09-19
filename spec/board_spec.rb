@@ -14,6 +14,10 @@ describe Board do
     it ":generate_moves" do
       expect(@gameboard).to respond_to(:generate_moves)
     end
+    it ":remove_piece" do
+      expect(@gameboard).to respond_to(:remove_piece).with(1).argument
+    end
+
   end
 
   context ":build_board" do
@@ -188,5 +192,27 @@ describe Board do
         expect(@gameboard.data[[5,3]][:occupant].can_move_to).to_not include([5,4])
       end
     end
+  end
+
+  describe ":remove_piece" do
+    before(:each) do
+      @gameboard.build_board
+      @gameboard.populate_board
+    end
+    context "when called on a location" do
+      it "empties the square if occupied" do
+        @gameboard.remove_piece([1,1])
+        expect(@gameboard.data[[1,1]][:occupant]).to eql(nil)
+        expect(@gameboard.white_set.data.keys).to_not include([1,1])
+        expect(@gameboard.white_set.captured.length).to eql(1)
+      end
+      it "returns nil if already empty" do
+        expect(@gameboard.remove_piece([4,4])).to eql(nil)
+      end
+      it "returns 'out of bounds' if location is out of bounds" do
+        expect(@gameboard.remove_piece([10,10])).to eql("out of bounds")
+      end
+    end
+
   end
 end

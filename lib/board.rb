@@ -115,4 +115,14 @@ class Board
       end
     end
   end
+
+  def remove_piece(location)
+    return "out of bounds" unless @data.keys.include?(location)
+    @data[location][:occupant] == nil ? return : holder = @data[location][:occupant]
+
+    @data[location][:occupant] = nil
+
+    holder.owner.data.delete(location)
+    holder.owner.captured << holder
+  end
 end
