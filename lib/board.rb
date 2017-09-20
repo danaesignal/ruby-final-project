@@ -125,4 +125,24 @@ class Board
     holder.owner.data.delete(location)
     holder.owner.captured << holder
   end
+
+  def move_piece(location, destination)
+    return "out of bounds" unless @data.keys.include?(location) && @data.keys.include?(destination)
+    return if @data[location][:occupant] == nil
+
+    if @data[destination][:occupant] == nil
+      @data[destination][:occupant] = @data[location][:occupant]
+      @data[location][:occupant] = nil
+      @data[destination][:occupant].owner.data.delete(location)
+      @data[destination][:occupant].owner.data[destination] = @data[destination][:occupant]
+    elsif @data[destination][:occupant].color == @data[location][:occupant].color
+      return false
+    else
+      remove_piece(destination)
+      @data[destination][:occupant] = @data[location][:occupant]
+      @data[location][:occupant] = nil
+      @data[destination][:occupant].owner.data.delete(location)
+      @data[destination][:occupant].owner.data[destination] = @data[destination][:occupant]
+    end
+  end
 end
