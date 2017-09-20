@@ -39,7 +39,10 @@ class Board
   # Generates all legal moves and captures for non-pawn/knight pieces
   # Calls appropriate methods for pawns and knights
   def generate_moves(curr_piece)
+    # Pawns and knights get their own generate methods
     return generate_pawn_moves(curr_piece) if curr_piece.type == :pawn
+    return generate_knight_moves(curr_piece) if curr_piece.type == :knight
+
     curr_piece.color == :white ? opposition = :black : opposition = :white
     curr_loc = curr_piece.owner.data.key(curr_piece)
     curr_piece.move_data.each do |k,v|
@@ -100,6 +103,24 @@ class Board
     pawn_moves.clear
   end
 
+  # Generates the list of legal moves for a knight
+  # Tis but a flesh wound
+  def generate_knight_moves(curr_piece)
+    curr_piece.color == :white ? opposition = :black : opposition = :white
+    curr_loc = curr_piece.owner.data.key(curr_piece)
+    curr_piece.move_data.each do |x|
+      possible_move = [curr_loc[0] + x[0], curr_loc[1] + x[1]]
+      next unless @data.keys.include?(possible_move)
+      if @data[possible_move][:occupant] == nil
+        curr_piece.can_move_to << possible_move
+      elsif @data[possible_move][:occupant].color == opposition
+        curr_piece.can_move_to << possible_move
+      else
+        next
+      end
+    end
+  end
+
   # Ensures that the kings cannot move into check, as per rules of chess
   def king_move_list_cleanup
     @white_set.data.each do |k,v|
@@ -116,6 +137,7 @@ class Board
     end
   end
 
+  # Method for removing pieces, typically via capture
   def remove_piece(location)
     return "out of bounds" unless @data.keys.include?(location)
     @data[location][:occupant] == nil ? return : holder = @data[location][:occupant]
@@ -126,18 +148,25 @@ class Board
     holder.owner.captured << holder
   end
 
+  # Method for moving pieces around the board, including to capture
+  # Does not check whether a move is legal for the piece; that's in Chess.rb
   def move_piece(location, destination)
+    # Does ensure the starting and ending locations are on the board
     return "out of bounds" unless @data.keys.include?(location) && @data.keys.include?(destination)
+    # And if there's actually a piece there.
     return if @data[location][:occupant] == nil
 
     if @data[destination][:occupant] == nil
+    # Empty destination
       @data[destination][:occupant] = @data[location][:occupant]
       @data[location][:occupant] = nil
       @data[destination][:occupant].owner.data.delete(location)
       @data[destination][:occupant].owner.data[destination] = @data[destination][:occupant]
     elsif @data[destination][:occupant].color == @data[location][:occupant].color
+    # Ally occupied destination
       return false
     else
+    # Enemy occupied destination
       remove_piece(destination)
       @data[destination][:occupant] = @data[location][:occupant]
       @data[location][:occupant] = nil

@@ -137,6 +137,28 @@ describe Board do
       end
     end
 
+    context "for knights" do
+      it "should identify the piece as a knight" do
+        expect(@gameboard).to receive(:generate_knight_moves)
+        @gameboard.generate_moves(@gameboard.data[[2,1]][:occupant])
+      end
+      context "a white knight in B1" do
+        it "should generate two legal moves with all pieces at default" do
+          @gameboard.generate_moves(@gameboard.data[[2,1]][:occupant])
+          expect(@gameboard.data[[2,1]][:occupant].can_move_to.length).to eql(2)
+        end
+        it "should be able to capture a black pawn in C3" do
+          @gameboard.move_piece([1,7],[3,3])
+          @gameboard.generate_moves(@gameboard.data[[2,1]][:occupant])
+          expect(@gameboard.data[[2,1]][:occupant].can_move_to).to include([3,3])
+        end
+        it "should not be able to move to C3 if a white pawn is there" do
+          @gameboard.move_piece([1,2],[3,3])
+          @gameboard.generate_moves(@gameboard.data[[2,1]][:occupant])
+          expect(@gameboard.data[[2,1]][:occupant].can_move_to).to_not include([3,3])
+        end
+      end
+    end
     context "for rooks" do
       it "should not add moves to a blocked rook's list" do
         @gameboard.generate_moves(@gameboard.data[[1,1]][:occupant])
@@ -215,48 +237,49 @@ describe Board do
         expect(@gameboard.remove_piece([10,10])).to eql("out of bounds")
       end
     end
-    describe ":move_piece" do
-      before(:each) do
-        @gameboard.build_board
-        @gameboard.populate_board
-      end
-      context "when called on a location and destination" do
-        it "returns 'out of bounds' if the starting location is off-board" do
-          expect(@gameboard.move_piece([10,10],[4,4])).to eql('out of bounds')
-        end
-        it "returns 'out of bounds' if the destination is off-board" do
-          expect(@gameboard.move_piece([1,1],[40,40])).to eql('out of bounds')
-        end
-      end
-      context "when called on a empty location" do
-        it "returns nil" do
-          expect(@gameboard.move_piece([4,4],[5,5])).to eql(nil)
-        end
-      end
-      context "when called on an occupied location" do
-        it "moves the piece to the destination if empty" do
-          @gameboard.move_piece([1,1],[5,5])
-          expect(@gameboard.data[[1,1]][:occupant]).to eql(nil)
-          expect(@gameboard.data[[5,5]][:occupant]).to_not eql(nil)
-          expect(@gameboard.data[[5,5]][:occupant].type).to eql(:rook)
-          expect(@gameboard.white_set.data[[1,1]]).to eql(nil)
-          expect(@gameboard.white_set.data[[5,5]].type).to eql(:rook)
-        end
-        it "returns false if the destination is occupied by an ally" do
-          expect(@gameboard.move_piece([1,1],[2,2])).to eql(false)
-        end
-        it "captures an enemy piece if the destination is occupied by one" do
-          @gameboard.move_piece([1,1],[8,8])
-          expect(@gameboard.data[[1,1]][:occupant]).to eql(nil)
-          expect(@gameboard.data[[8,8]][:occupant]).to_not eql(nil)
-          expect(@gameboard.data[[8,8]][:occupant].type).to eql(:rook)
-          expect(@gameboard.white_set.data[[1,1]]).to eql(nil)
-          expect(@gameboard.white_set.data[[8,8]].type).to eql(:rook)
+  end
 
-          expect(@gameboard.black_set.data[[8,8]]).to eql(nil)
-          expect(@gameboard.black_set.data.keys.length).to eql(15)
-          expect(@gameboard.black_set.captured.length).to eql(1)
-        end
+  describe ":move_piece" do
+    before(:each) do
+      @gameboard.build_board
+      @gameboard.populate_board
+    end
+    context "when called on a location and destination" do
+      it "returns 'out of bounds' if the starting location is off-board" do
+        expect(@gameboard.move_piece([10,10],[4,4])).to eql('out of bounds')
+      end
+      it "returns 'out of bounds' if the destination is off-board" do
+        expect(@gameboard.move_piece([1,1],[40,40])).to eql('out of bounds')
+      end
+    end
+    context "when called on a empty location" do
+      it "returns nil" do
+        expect(@gameboard.move_piece([4,4],[5,5])).to eql(nil)
+      end
+    end
+    context "when called on an occupied location" do
+      it "moves the piece to the destination if empty" do
+        @gameboard.move_piece([1,1],[5,5])
+        expect(@gameboard.data[[1,1]][:occupant]).to eql(nil)
+        expect(@gameboard.data[[5,5]][:occupant]).to_not eql(nil)
+        expect(@gameboard.data[[5,5]][:occupant].type).to eql(:rook)
+        expect(@gameboard.white_set.data[[1,1]]).to eql(nil)
+        expect(@gameboard.white_set.data[[5,5]].type).to eql(:rook)
+      end
+      it "returns false if the destination is occupied by an ally" do
+        expect(@gameboard.move_piece([1,1],[2,2])).to eql(false)
+      end
+      it "captures an enemy piece if the destination is occupied by one" do
+        @gameboard.move_piece([1,1],[8,8])
+        expect(@gameboard.data[[1,1]][:occupant]).to eql(nil)
+        expect(@gameboard.data[[8,8]][:occupant]).to_not eql(nil)
+        expect(@gameboard.data[[8,8]][:occupant].type).to eql(:rook)
+        expect(@gameboard.white_set.data[[1,1]]).to eql(nil)
+        expect(@gameboard.white_set.data[[8,8]].type).to eql(:rook)
+
+        expect(@gameboard.black_set.data[[8,8]]).to eql(nil)
+        expect(@gameboard.black_set.data.keys.length).to eql(15)
+        expect(@gameboard.black_set.captured.length).to eql(1)
       end
     end
   end
