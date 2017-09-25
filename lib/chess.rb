@@ -71,13 +71,20 @@ class Chess
         translated_coords = translate(u_input)
 
         if translated_coords == false
-          # Go back to start
+          next
         else
           # Call the command to start movement
-          move_on = true
+          movement_happened = movement(translated_coords)
+          if movement_happened == false
+            next
+          else
+            move_on = true
+          end
         end
       end
     end
+    # Call a method to show the board again
+    end_of_turn
   end
 
   def translate(u_input)
@@ -85,8 +92,34 @@ class Chess
     translated_coords = Array.new
     translated_coords[0] = x_index.find_index(u_input[0])
     translated_coords[1] = u_input[1].to_i
-    return false unless @gameboard.data.keys.include?(translated_coords)
-    return translated_coords
+    return translated_coords if @gameboard.data.keys.include?(translated_coords)
+    return false
+  end
+
+  def movement(coords)
+    if @gameboard.data[coords][:occupant].color == @current_turn
+      if @gameboard.data[coords][:occupant].can_move_to.count > 0
+        loop do
+          puts "Please enter a destination."
+          u_input = gets.chomp
+          @destination = translate(u_input)
+          if @destination == false
+            puts "That location is invalid."
+            next
+          end
+          unless @gameboard.data[coords][:occupant].can_move_to.include?(@destination)
+            puts "That piece cannot reach that destination."
+            next
+          end
+          @gameboard.move_piece(coords,@destination)
+          return true
+        end
+      else
+        return false
+      end
+    else
+      return false
+    end
   end
 
   def end_of_turn

@@ -93,6 +93,23 @@ describe Chess do
         game.start_of_turn
       end
     end
+    context "when the user inputs b1" do
+      it "and c3 it moves a knight" do
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets).and_return("b1","c3")
+        game.start_of_turn
+        expect(game.gameboard.data[[3,3]][:occupant].type).to eql(:knight)
+      end
+      it "and c4 it doesn't move a knight" do
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets).and_return("b1","c4")
+        allow(game).to receive(:loop).and_yield
+        game.start_of_turn
+        expect(game.gameboard.data[[2,1]][:occupant].type).to eql(:knight)
+      end
+    end
   end
 
   describe ":translate" do
@@ -104,6 +121,88 @@ describe Chess do
     it "takes z11 and returns false" do
       game.end_of_turn
       expect(game.translate("z11")).to eql(false)
+    end
+  end
+
+  describe ":movement" do
+    let(:game) {Chess.new}
+    context "a white knight on b1" do
+      it "can move to empty square c3" do
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"c3"}
+        game.movement([2,1])
+        expect(game.gameboard.data[[3,3]][:occupant].type).to eql(:knight)
+      end
+      it "cannot move to a white pawn occupied c3" do
+        game.end_of_turn
+        game.gameboard.move_piece([2,2],[3,3])
+        game.end_of_turn
+        game.end_of_turn
+        allow(game).to receive(:loop).and_yield
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"c3"}
+        game.movement([2,1])
+        expect(game.gameboard.data[[3,3]][:occupant].type).to eql(:pawn)
+      end
+      it "can capture a black pawn in c3" do
+        game.end_of_turn
+        game.gameboard.move_piece([7,7],[3,3])
+        game.end_of_turn
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"c3"}
+        game.movement([2,1])
+        expect(game.gameboard.data[[3,3]][:occupant].type).to eql(:knight)
+      end
+      it "cannot move to empty square d3" do
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"d3"}
+        allow(game).to receive(:loop).and_yield
+        game.movement([2,1])
+        expect(game.gameboard.data[[4,3]][:occupant]).to eql(nil)
+      end
+    end
+
+    context "a black pawn on b7" do
+      it "can move to empty square b6" do
+        game.end_of_turn
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"b6"}
+        game.movement([2,7])
+        expect(game.gameboard.data[[2,6]][:occupant]).to_not eql(nil)
+      end
+      it "cannot move to a white pawn occupied b6" do
+        game.end_of_turn
+        game.gameboard.move_piece([2,2],[2,6])
+        game.end_of_turn
+
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"b6"}
+        game.movement([2,7])
+        expect(game.gameboard.data[[2,6]][:occupant].color).to eql(:white)
+      end
+      it "can capture a white pawn in c6" do
+        game.end_of_turn
+        game.gameboard.move_piece([2,2],[3,6])
+        game.end_of_turn
+
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"c6"}
+        game.movement([2,7])
+        expect(game.gameboard.data[[3,6]][:occupant].color).to eql(:black)
+      end
+      it "cannot move to empty square b3" do
+        game.end_of_turn
+        game.end_of_turn
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets){"b3"}
+        allow(game).to receive(:loop).and_yield
+        game.movement([2,7])
+        expect(game.gameboard.data[[3,3]][:occupant]).to eql(nil)
+      end
     end
   end
 end
