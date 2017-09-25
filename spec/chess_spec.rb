@@ -50,4 +50,15 @@ describe Chess do
       end
     end
   end
+  describe ":translate" do
+    let(:game) {Chess.new}
+    it "takes a1 and returns [1,1]" do
+      game.end_of_turn
+      expect(game.translate("a1")).to eql([1,1])
+    end
+    it "takes z11 and returns false" do
+      game.end_of_turn
+      expect(game.translate("z11")).to eql(false)
+    end
+  end
 end

@@ -47,6 +47,15 @@ class Chess
     @current_turn = load_state[:curr_player]
   end
 
+  def translate(u_input)
+    x_index = ["INVALID","a","b","c","d","e","f","g","h"]
+    translated_coords = Array.new
+    translated_coords[0] = x_index.find_index(u_input[0])
+    translated_coords[1] = u_input[1].to_i
+    return false unless @gameboard.data.keys.include?(translated_coords)
+    return translated_coords
+  end
+
   def end_of_turn
     if @current_turn == :new_game
       @gameboard.build_board
