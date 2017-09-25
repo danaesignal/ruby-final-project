@@ -1,5 +1,7 @@
 require_relative "board.rb"
 require "yaml"
+require "colorize"
+
 class Chess
   attr_reader :gameboard, :current_turn
 
@@ -8,6 +10,7 @@ class Chess
     @current_turn = :new_game
   end
 
+  # Displays introductory screen and game options.
   def title_screen
     puts "Welcome to Chess!"
     valid_in = false
@@ -16,7 +19,9 @@ class Chess
       puts "[N]ew Game, or [C]ontinue?"
       u_input = gets.chomp.downcase
       if u_input == "c"
-        puts "Save/Continue functionality not yet implemented."
+        puts "Loading game.."
+        valid_in = true
+        load_game
       else
         puts "New game!"
         valid_in = true
@@ -35,11 +40,17 @@ class Chess
   end
 
   def load_game
-    return false unless File.exists?("saved_game.yml")
-    load_state = YAML.load(File.open("saved_game.yml"))
+    unless File.exists?("saved_game.yml")
+      puts "No saved game found. Starting new game!"
+      end_of_turn
+    else
+      load_state = YAML.load(File.open("saved_game.yml"))
 
-    @gameboard = load_state[:board_state]
-    @current_turn = load_state[:curr_player]
+      @gameboard = load_state[:board_state]
+      @current_turn = load_state[:curr_player]
+
+      start_of_turn
+    end
   end
 
   def start_of_turn
