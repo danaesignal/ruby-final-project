@@ -57,6 +57,8 @@ class Chess
     # Call a method that displays the board here
     move_on = false
 
+    @gameboard.print_board
+
     loop do
       break if move_on == true
       puts "#{current_turn.to_s.capitalize}, select a piece to move.\nYou may also [s]ave, s[a]ve and exit, or e[x]it without saving."
@@ -94,7 +96,7 @@ class Chess
         end
       end
     end
-    # Call a method to show the board again
+    @gameboard.print_board
     end_of_turn
   end
 

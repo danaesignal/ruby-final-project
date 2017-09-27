@@ -20,6 +20,9 @@ describe Board do
     it ":move_piece" do
       expect(@gameboard).to respond_to(:move_piece).with(2).argument
     end
+    it ":print_board" do
+      expect(@gameboard).to respond_to(:print_board)
+    end
   end
 
   context ":build_board" do
@@ -281,6 +284,16 @@ describe Board do
         expect(@gameboard.black_set.data.keys.length).to eql(15)
         expect(@gameboard.black_set.captured.length).to eql(1)
       end
+    end
+  end
+  describe ":print_board" do
+    let(:board){Board.new}
+    it "shows a board (confirm visually)" do
+      board.build_board
+      board.populate_board
+
+      board.print_board
+      expect(board).to_not eql(nil)
     end
   end
 end

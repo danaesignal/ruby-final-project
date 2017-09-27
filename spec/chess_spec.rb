@@ -103,7 +103,7 @@ describe Chess do
       end
       it "and c4 it doesn't move a knight" do
         game.end_of_turn
-        allow(game).to receive(:puts)
+        allow(game).to receive(:puts)        
         allow(game).to receive(:gets).and_return("b1","c4")
         allow(game).to receive(:loop).and_yield
         game.start_of_turn

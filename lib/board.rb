@@ -1,4 +1,5 @@
 require_relative "set"
+require "colorize"
 # Controls the layout of the board, and what piece lies where
 class Board
   attr_reader :data, :white_set, :black_set
@@ -6,6 +7,14 @@ class Board
   def initialize
     @data = Hash.new
     @x_index = [nil,"a","b","c","d","e","f","g","h"]
+    @sym_dict = {
+      pawn: "P",
+      knight: "N",
+      rook: "R",
+      bishop: "B",
+      king: "K",
+      queen: "Q",
+    }
   end
 
   # Contructs a hash with 64 definitions to serve as the board
@@ -102,12 +111,12 @@ class Board
 
     # Pawns have unique capture behavior
     curr_piece.capture_data.each do |k,v|
-        possible_cap = [curr_loc[0] + v[0], curr_loc[1] + v[1]]
-        next unless @data.keys.include?(possible_cap)
-        next if @data[possible_cap][:occupant] == nil
-        if @data[possible_cap][:occupant].color == opposition
-          curr_piece.can_move_to << possible_cap
-        end
+      possible_cap = [curr_loc[0] + v[0], curr_loc[1] + v[1]]
+      next unless @data.keys.include?(possible_cap)
+      next if @data[possible_cap][:occupant] == nil
+      if @data[possible_cap][:occupant].color == opposition
+        curr_piece.can_move_to << possible_cap
+      end
     end
   end
 
@@ -166,21 +175,60 @@ class Board
     return if @data[location][:occupant] == nil
 
     if @data[destination][:occupant] == nil
-    # Empty destination
+      # Empty destination
       @data[destination][:occupant] = @data[location][:occupant]
       @data[location][:occupant] = nil
       @data[destination][:occupant].owner.data.delete(location)
       @data[destination][:occupant].owner.data[destination] = @data[destination][:occupant]
     elsif @data[destination][:occupant].color == @data[location][:occupant].color
-    # Ally occupied destination
+      # Ally occupied destination
       return false
     else
-    # Enemy occupied destination
+      # Enemy occupied destination
       remove_piece(destination)
       @data[destination][:occupant] = @data[location][:occupant]
       @data[location][:occupant] = nil
       @data[destination][:occupant].owner.data.delete(location)
       @data[destination][:occupant].owner.data[destination] = @data[destination][:occupant]
+    end
+  end
+
+  def print_board
+    square = String.new
+    line = String.new
+    row_queue = Array.new
+    row = 1
+
+    @data.each_with_index do |(k,v), i|
+      if v[:occupant] == nil
+        square = "   "
+      else
+        v[:occupant].color == :white ? square = " #{@sym_dict[v[:occupant].type]} ".cyan : square = " #{@sym_dict[v[:occupant].type]} ".red
+      end
+      if row.modulo(2) == 0
+        if i.modulo(2) == 0
+          line << square.on_white
+        else
+          line << square.on_black
+        end
+      else
+        if i.modulo(2) == 0
+          line << square.on_black
+        else
+          line << square.on_white
+        end
+      end
+      offset = i + 1
+      if offset.modulo(8) == 0
+        line = " #{row} " + line
+        row_queue << line
+        row += 1
+        line = String.new
+      end
+    end
+    row_queue.unshift("    A  B  C  D  E  F  G  H ")
+    9.times do
+      puts row_queue.pop
     end
   end
 end
