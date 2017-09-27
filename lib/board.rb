@@ -2,7 +2,7 @@ require_relative "set"
 require "colorize"
 # Controls the layout of the board, and what piece lies where
 class Board
-  attr_reader :data, :white_set, :black_set
+  attr_reader :data, :white_set, :black_set, :black_king, :white_king
 
   def initialize
     @data = Hash.new
@@ -193,6 +193,7 @@ class Board
     end
   end
 
+  # Prints the current state of the chess board.
   def print_board
     square = String.new
     line = String.new

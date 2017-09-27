@@ -103,7 +103,7 @@ describe Chess do
       end
       it "and c4 it doesn't move a knight" do
         game.end_of_turn
-        allow(game).to receive(:puts)        
+        allow(game).to receive(:puts)
         allow(game).to receive(:gets).and_return("b1","c4")
         allow(game).to receive(:loop).and_yield
         game.start_of_turn
@@ -202,6 +202,27 @@ describe Chess do
         allow(game).to receive(:loop).and_yield
         game.movement([2,7])
         expect(game.gameboard.data[[3,3]][:occupant]).to eql(nil)
+      end
+    end
+  end
+
+  describe ":check_if_checked" do
+    let(:game){Chess.new}
+    context "if the white king is not in check" do
+      it "does not change the white king's checked flag" do
+        game.end_of_turn
+        game.check_if_checked
+        expect(game.gameboard.white_king.in_check).to eql(false)
+      end
+    end
+    context "if the white king is in check" do
+      it "calls the game in favor of black" do
+        expect {
+          allow(game).to receive(:puts)
+          game.end_of_turn
+          game.gameboard.move_piece([1,8],[4,1])
+          game.end_of_turn
+        }.to raise_error(SystemExit)
       end
     end
   end

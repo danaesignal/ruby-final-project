@@ -145,6 +145,56 @@ class Chess
     @gameboard.black_set.data.each_value {|piece| @gameboard.generate_moves(piece)}
     @gameboard.king_move_list_cleanup
 
+    check_if_checked
+
     @current_turn == :white ? @current_turn = :black : @current_turn = :white
+  end
+
+  def check_if_checked
+    @all_white_moves = Array.new
+    @all_black_moves = Array.new
+    end_game = false
+
+    if @current_turn == :white
+      @gameboard.black_set.data.each do |k,v|
+        v.can_move_to.each do |x|
+          @all_black_moves << x
+        end
+      end
+
+      if @all_black_moves.include?(@gameboard.white_king.owner.data.key(@gameboard.white_king))
+        @gameboard.white_king.in_check = true
+      else
+        @gameboard.white_king.in_check = false
+      end
+    else
+      @gameboard.white_set.data.each do |k,v|
+        v.can_move_to.each do |x|
+          @all_white_moves << x
+        end
+      end
+
+      if @all_white_moves.include?(@gameboard.black_king.owner.data.key(@gameboard.black_king))
+        @gameboard.black_king.in_check = true
+      else
+        @gameboard.black_king.in_check = false
+      end
+    end
+
+    if @current_turn == :white
+      if @gameboard.white_king.in_check == true
+        end_game = true
+      end
+    elsif @current_turn == :black
+      if @gameboard.black_king.in_check == true
+        end_game = true
+      end
+    end
+
+    if end_game == true
+      puts "You have failed to, or were unable to, move your King out of check!"
+      puts "Checkmate!"
+      exit
+    end
   end
 end
