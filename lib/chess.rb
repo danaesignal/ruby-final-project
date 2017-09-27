@@ -63,7 +63,7 @@ class Chess
       break if move_on == true
       puts "#{current_turn.to_s.capitalize}, select a piece to move.\nYou may also [s]ave, s[a]ve and exit, or e[x]it without saving."
 
-      u_input = gets.chomp
+      u_input = gets.chomp.downcase
 
       case u_input
       when "s"
@@ -148,6 +148,7 @@ class Chess
     check_if_checked
 
     @current_turn == :white ? @current_turn = :black : @current_turn = :white
+    start_of_turn
   end
 
   def check_if_checked
